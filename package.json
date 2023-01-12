@@ -1,0 +1,9 @@
+{
+  "name": "izdelek1_brick_breaker",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "parcel": "^2.8.2"
+  }
+}
