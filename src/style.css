@@ -14,3 +14,21 @@ body {
 img {
   display: none;
 }
+
+canvas {
+  z-index: 1;
+}
+
+input {
+  z-index: 2;
+}
+
+.bg {
+  background-image: url("../assets/bg.jpg");
+  height: 100%;
+  width: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: fixed;
+}

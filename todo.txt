@@ -2,7 +2,7 @@ __leaderboard
 _multiplayer
 _animacije
 _you win screen
-boljsa grafika
-background slike
+_boljsa grafika
+_background slike
+_navigacija iz kjerkoli kamorkoli (sam dej pousod S, L, M text, mal input.js editej)
 vec levelou od lazjega proti tezjemu
-navigacija iz kjerkoli kamorkoli (sam dej pousod S, L, M text, mal input.js editej)

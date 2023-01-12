@@ -12,9 +12,7 @@ export const GAMESTATE = {
   YOUWIN: 4,
   LEADERBOARD: 5,
   SETTINGS: 6,
-  PAUSED: 7,
-  NAMEINPUT: 8,
-  LEADERBOARD: 9,
+  NAMEINPUT: 7,
 };
 
 export default class Game {
@@ -25,7 +23,11 @@ export default class Game {
     this.imgball = document.getElementById("img_ball");
 
     this.volume = localStorage.getItem("volume");
-    if (this.volume == null) this.volume = 5;
+    if (this.volume == null) this.volume = 3;
+
+    // let song = document.getElementById("song");
+    // song.volume = this.volume / 10;
+    // song.muted = false;
 
     this.difficulty = localStorage.getItem("difficulty");
     if (this.difficulty == null) this.difficulty = 1;
@@ -143,6 +145,9 @@ export default class Game {
   }
 
   draw(ctx) {
+    let bg2 = document.getElementById("bg2");
+    ctx.drawImage(bg2, 0, 0, this.screenWidth, this.screenHeight);
+
     if (this.gameState === GAMESTATE.MENU) {
       this.drawMenu(ctx);
     } else if (this.gameState === GAMESTATE.SETTINGS) {
@@ -155,7 +160,13 @@ export default class Game {
       this.drawNameInput(ctx);
     } else if (this.gameState === GAMESTATE.LEADERBOARD) {
       this.drawLeaderboard(ctx);
-      ctx.fillText("Press Enter to play", 300, 500);
+      ctx.textAlign = "center";
+      ctx.fillText(
+        "Press Enter to play",
+        this.screenWidth / 2,
+        this.screenHeight / 2 + 150
+      );
+      this.drawInputOptions(ctx, this.screenHeight / 2 + 190, 40);
     } else if (this.gameState === GAMESTATE.YOUWIN) {
       this.drawYouWin(ctx);
     } else {
@@ -203,30 +214,38 @@ export default class Game {
       this.screenHeight / 2
     );
 
-    ctx.fillText(
-      "Press S for settings",
-      this.screenWidth / 2,
-      this.screenHeight / 2 + 50
-    );
+    this.drawInputOptions(ctx, this.screenHeight / 2 + 50, 50);
+  }
+
+  drawInputOptions(ctx, starty, spacing) {
+    ctx.font = "25px Arial";
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+
+    ctx.fillText("Press S for settings", this.screenWidth / 2, starty);
 
     ctx.fillText(
       "Press L for leaderboard",
       this.screenWidth / 2,
-      this.screenHeight / 2 + 100
+      starty + spacing
     );
 
     ctx.fillText(
       "Press M for multiplayer",
       this.screenWidth / 2,
-      this.screenHeight / 2 + 150
+      starty + 2 * spacing
     );
+
+    // ctx.textAlign = "left";
   }
 
   drawGameOver(ctx) {
-    ctx.font = "25px Arial";
+    ctx.font = "40px Arial";
     ctx.fillStyle = "white";
     ctx.textAlign = "center";
     ctx.fillText("Game Over", this.screenWidth / 2, 100);
+
+    ctx.font = "25px Arial";
 
     this.drawLeaderboard(ctx);
 
@@ -236,6 +255,8 @@ export default class Game {
       this.screenWidth / 2,
       this.screenHeight / 2 + 150
     );
+
+    this.drawInputOptions(ctx, this.screenHeight / 2 + 190, 40);
   }
 
   drawYouWin(ctx) {
@@ -254,6 +275,8 @@ export default class Game {
       this.screenWidth / 2,
       this.screenHeight / 2 + 150
     );
+
+    this.drawInputOptions(ctx, this.screenHeight / 2 + 190, 40);
   }
 
   drawLeaderboard(ctx) {
@@ -296,6 +319,7 @@ export default class Game {
       this.screenWidth / 2,
       this.screenHeight / 2 + 150
     );
+    this.drawInputOptions(ctx, this.screenHeight / 2 + 190, 40);
   }
 
   handleClick(x, y) {

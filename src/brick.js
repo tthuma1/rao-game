@@ -24,13 +24,23 @@ export default class Brick {
   }
 
   draw(ctx) {
-    ctx.drawImage(
-      this.images[this.type - 1],
-      this.position.x,
-      this.position.y,
-      this.width,
-      this.height
-    );
+    if (this.type > 0) {
+      ctx.drawImage(
+        this.images[this.type - 1],
+        this.position.x,
+        this.position.y,
+        this.width,
+        this.height
+      );
+    } else {
+      ctx.drawImage(
+        this.images[0],
+        this.position.x,
+        this.position.y,
+        this.width,
+        this.height
+      );
+    }
 
     // if (this.hitTimestamp && this.type == 1) {
     //   this.height -= 3;
@@ -43,7 +53,7 @@ export default class Brick {
     let prevState = this.type;
 
     this.balls.forEach(ball => {
-      if (!this.hitTimestamp) {
+      if (this.hitTimestamp == 0) {
         let hit = detectCollision(ball, this);
         switch (hit) {
           case 1: // hit top or bottom
@@ -72,7 +82,7 @@ export default class Brick {
           this.position.x -= 2;
           this.position.y -= 2;
           if (this.type < 1) {
-            this.type = 1; // prevent error
+            // this.type = 1; // prevent error
             this.destroyed = true;
             // this.markedForDeletion = true;
           }
@@ -80,13 +90,7 @@ export default class Brick {
       }
     });
 
-    if (prevState != this.type) {
-      // hit
-      this.game.score++;
-      return 1;
-    }
-
-    if (this.hitTimestamp != 0 && timestamp > this.hitTimestamp + 30) {
+    if (this.hitTimestamp != 0 && timestamp > this.hitTimestamp + 50) {
       this.height -= 5;
       this.width -= 5;
       this.position.x += 2;
@@ -96,6 +100,12 @@ export default class Brick {
 
       if (this.destroyed == true) this.markedForDeletion = true;
       else this.hitTimestamp = 0;
+    }
+
+    if (prevState != this.type) {
+      // hit
+      this.game.score++;
+      return 1;
     }
 
     return 0; // no hit

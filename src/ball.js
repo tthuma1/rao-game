@@ -26,12 +26,7 @@ export default class Ball {
     this.players = [this.game.player];
     if (this.game.mode == "multi") this.players.push(this.game.player2);
 
-    console.log(this.game.mode);
-    console.log(this.players);
-
     this.reset();
-
-    console.log(this.position);
   }
 
   reset() {

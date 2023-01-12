@@ -5,9 +5,12 @@ export default class InputHandler {
     this.keys = game.keys;
     this.mode = game.mode;
     this.game = game;
+    this.volume = localStorage.getItem("volume");
+    if (this.volume == null) this.volume = 5;
 
     document.addEventListener("keydown", e => {
       // console.log(e.key);
+
       switch (e.key) {
         case "a":
         case "A":
@@ -48,24 +51,43 @@ export default class InputHandler {
           break;
         case "s":
         case "S":
-          if (game.gameState === GAMESTATE.MENU)
+          // if (game.gameState === GAMESTATE.MENU)
+          if (
+            game.gameState !== GAMESTATE.RUNNING &&
+            // game.gameState !== GAMESTATE.PAUSED &&
+            game.gameState !== GAMESTATE.NAMEINPUT
+          )
             game.gameState = GAMESTATE.SETTINGS;
           break;
         case "l":
         case "L":
-          game.gameState = GAMESTATE.LEADERBOARD;
+          if (
+            game.gameState !== GAMESTATE.RUNNING &&
+            // game.gameState !== GAMESTATE.PAUSED &&
+            game.gameState !== GAMESTATE.NAMEINPUT
+          )
+            game.gameState = GAMESTATE.LEADERBOARD;
           break;
         case "m":
         case "M":
-          game.mode = "multi";
-          this.mode = "multi";
-          game.start();
+          if (
+            game.gameState !== GAMESTATE.RUNNING &&
+            // game.gameState !== GAMESTATE.PAUSED &&
+            game.gameState !== GAMESTATE.NAMEINPUT
+          ) {
+            game.mode = "multi";
+            this.mode = "multi";
+            game.start();
+          }
           break;
         case "Escape":
           if (game.gameState === GAMESTATE.RUNNING)
             game.gameState = GAMESTATE.PAUSED;
           break;
       }
+
+      // ker se ne synca z this.game.volume
+      this.setMusic();
     });
 
     document.addEventListener("keyup", e => {
@@ -89,10 +111,20 @@ export default class InputHandler {
       let rect = c.getBoundingClientRect();
       // console.log(e.x - rect.left);
       game.handleClick(e.x - rect.left, e.y - rect.top);
+
+      this.setMusic();
     });
   }
 
   changeKeys(newKeys) {
     this.keys = newKeys;
+  }
+
+  setMusic() {
+    this.volume = localStorage.getItem("volume");
+    if (this.volume == null) this.volume = 3;
+    let song = document.getElementById("song");
+    song.volume = this.volume / 10;
+    song.muted = false;
   }
 }

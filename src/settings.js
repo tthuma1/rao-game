@@ -6,12 +6,12 @@ export default class Settings {
     ];
 
     this.rects = [
-      { x: 470, y: 130, w: 25, h: 25, direction: 0, type: 0 }, // left, volume
-      { x: 630, y: 130, w: 25, h: 25, direction: 1, type: 0 }, // right, volume
-      { x: 470, y: 200, w: 25, h: 25, direction: 0, type: 1 }, // left, difficulty
-      { x: 630, y: 200, w: 25, h: 25, direction: 1, type: 1 }, // right, difficulty
-      { x: 470, y: 270, w: 25, h: 25, direction: 0, type: 2 }, // left, keys
-      { x: 630, y: 270, w: 25, h: 25, direction: 1, type: 2 }, // right, keys
+      { x: 470, y: 130, w: 27, h: 27, direction: 0, type: 0 }, // left, volume
+      { x: 630, y: 130, w: 27, h: 27, direction: 1, type: 0 }, // right, volume
+      { x: 470, y: 200, w: 27, h: 27, direction: 0, type: 1 }, // left, difficulty
+      { x: 630, y: 200, w: 27, h: 27, direction: 1, type: 1 }, // right, difficulty
+      { x: 470, y: 270, w: 27, h: 27, direction: 0, type: 2 }, // left, keys
+      { x: 630, y: 270, w: 27, h: 27, direction: 1, type: 2 }, // right, keys
     ];
 
     this.volume = game.volume;
@@ -55,9 +55,17 @@ export default class Settings {
 
     ctx.textAlign = "center";
     ctx.fillText(keys_text, 560, 290);
-    ctx.textAlign = "left";
+    // ctx.textAlign = "left";
 
-    ctx.fillText("Press Enter to play", 300, 500);
+    // ctx.fillText("Press Enter to play", 300, 500);
+    ctx.textAlign = "center";
+
+    ctx.fillText(
+      "Press Enter to play",
+      this.game.screenWidth / 2,
+      this.game.screenHeight / 2 + 100
+    );
+    this.game.drawInputOptions(ctx, this.game.screenHeight / 2 + 150, 50);
   }
 
   handleClick(x, y) {
@@ -76,6 +84,9 @@ export default class Settings {
           if (this.volume > 10) this.volume = 10;
           else if (this.volume < 0) this.volume = 0;
 
+          let song = document.getElementById("song");
+          song.volume = this.volume / 10;
+          song.muted = false;
           localStorage.setItem("volume", this.volume);
         } else if (rect.type === 1) {
           // difficulty
