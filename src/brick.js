@@ -105,6 +105,9 @@ export default class Brick {
     if (prevState != this.type) {
       // hit
       this.game.score++;
+      let popSound = document.getElementById("pop");
+      popSound.currentTime = 0;
+      popSound.play();
       return 1;
     }
 

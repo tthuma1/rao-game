@@ -68,14 +68,19 @@ export default class Game {
 
     this.score = 0;
 
-    this.inputHandler = new InputHandler(this.player, this);
-    this.hasInput = false;
-    this.playerName = "";
-
     this.mode = "single";
 
     this.player2 = new Player(this, 1);
     this.ball2 = new Ball(this, 1);
+
+    this.inputHandler = new InputHandler(this.player, this);
+    this.hasInput = false;
+    this.playerName = "";
+  }
+
+  init() {
+    this.currentLevel = 0;
+    this.score = 0;
   }
 
   start() {
@@ -92,7 +97,7 @@ export default class Game {
 
     this.lives = 5 - this.difficulty;
     // this.lives = 1;
-    if (this.level == 0) this.score = 0;
+    if (this.currentLevel == 0) this.score = 0;
 
     try {
       this.playerName = document.getElementById("nameinput").value;
@@ -121,6 +126,8 @@ export default class Game {
     if (this.lives === 0) {
       if (this.gameState !== GAMESTATE.GAMEOVER) this.updateLeaderboard();
       this.gameState = GAMESTATE.GAMEOVER;
+      this.currentLevel = 0;
+      this.score = 0;
     }
 
     [...this.gameObjects].forEach(object => object.update());
@@ -137,11 +144,14 @@ export default class Game {
       if (this.currentLevel >= this.levels.length) {
         this.gameState = GAMESTATE.YOUWIN;
         this.currentLevel = 0;
+        this.score = 0;
       } else {
         this.start();
       }
       // }
     }
+
+    this.inputHandler.update();
   }
 
   draw(ctx) {

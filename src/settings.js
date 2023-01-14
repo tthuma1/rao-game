@@ -84,9 +84,6 @@ export default class Settings {
           if (this.volume > 10) this.volume = 10;
           else if (this.volume < 0) this.volume = 0;
 
-          let song = document.getElementById("song");
-          song.volume = this.volume / 10;
-          song.muted = false;
           localStorage.setItem("volume", this.volume);
         } else if (rect.type === 1) {
           // difficulty

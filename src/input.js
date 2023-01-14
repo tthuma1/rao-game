@@ -3,10 +3,18 @@ import { GAMESTATE } from "./game";
 export default class InputHandler {
   constructor(player, game) {
     this.keys = game.keys;
-    this.mode = game.mode;
+    // this.mode = game.mode;
     this.game = game;
     this.volume = localStorage.getItem("volume");
     if (this.volume == null) this.volume = 5;
+
+    this.moveLeft = false;
+    this.moveRight = false;
+    this.moveLeft2 = false;
+    this.moveRight2 = false;
+
+    this.player = player;
+    this.player2 = game.player2;
 
     document.addEventListener("keydown", e => {
       // console.log(e.key);
@@ -14,19 +22,19 @@ export default class InputHandler {
       switch (e.key) {
         case "a":
         case "A":
-          if (this.keys == 0 || this.mode == "multi") player.moveLeft();
+          if (this.keys == 0 || this.mode == "multi") this.moveLeft = true; //player.moveLeft();
           break;
         case "d":
         case "D":
-          if (this.keys == 0 || this.mode == "multi") player.moveRight();
+          if (this.keys == 0 || this.mode == "multi") this.moveRight = true; //player.moveRight();
           break;
         case "ArrowLeft":
-          if (this.keys == 1) player.moveLeft();
-          if (this.mode == "multi") this.game.player2.moveLeft();
+          if (this.keys == 1) this.moveLeft = true; // player.moveLeft();
+          if (this.mode == "multi") this.moveLeft2 = true; //game.player2.moveLeft();
           break;
         case "ArrowRight":
-          if (this.keys == 1) player.moveRight();
-          if (this.mode == "multi") this.game.player2.moveRight();
+          if (this.keys == 1) this.moveRight = true; //player.moveRight();
+          if (this.mode == "multi") this.moveRight2 = true; //game.player2.moveRight();
           break;
         case " ":
           game.ball.go();
@@ -47,7 +55,10 @@ export default class InputHandler {
             game.gameState = GAMESTATE.NAMEINPUT;
           } else if (game.gameState === GAMESTATE.PAUSED)
             game.gameState = GAMESTATE.RUNNING;
-          else if (game.gameState === GAMESTATE.NAMEINPUT) game.start();
+          else if (game.gameState === GAMESTATE.NAMEINPUT) {
+            game.init();
+            game.start();
+          }
           break;
         case "s":
         case "S":
@@ -77,6 +88,7 @@ export default class InputHandler {
           ) {
             game.mode = "multi";
             this.mode = "multi";
+            game.init();
             game.start();
           }
           break;
@@ -86,21 +98,27 @@ export default class InputHandler {
           break;
       }
 
-      // ker se ne synca z this.game.volume
       this.setMusic();
     });
 
     document.addEventListener("keyup", e => {
       switch (e.key) {
         case "a":
-        case "d":
         case "A":
+          this.moveLeft = false;
+          break;
+        case "d":
         case "D":
-          player.stop();
+          this.moveRight = false;
+          //player.stop();
+          break;
         case "ArrowLeft":
+          if (this.mode == "single") this.moveLeft = false; //player.stop();
+          if (this.mode == "multi") this.moveLeft2 = false; //game.player2.stop();
+          break;
         case "ArrowRight":
-          if (this.mode == "single") player.stop();
-          if (this.mode == "multi") this.game.player2.stop();
+          if (this.mode == "single") this.moveRight = false; //player.stop();
+          if (this.mode == "multi") this.moveRight2 = false; //game.player2.stop();
           break;
       }
     });
@@ -116,11 +134,22 @@ export default class InputHandler {
     });
   }
 
+  update() {
+    if (this.moveRight) this.player.moveRight();
+    else if (this.moveLeft) this.player.moveLeft();
+    else this.player.stop();
+
+    if (this.moveRight2) this.player2.moveRight();
+    else if (this.moveLeft2) this.player2.moveLeft();
+    else this.player2.stop();
+  }
+
   changeKeys(newKeys) {
     this.keys = newKeys;
   }
 
   setMusic() {
+    // ker se ne synca z this.game.volume
     this.volume = localStorage.getItem("volume");
     if (this.volume == null) this.volume = 3;
     let song = document.getElementById("song");
