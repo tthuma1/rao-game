@@ -20,6 +20,10 @@ export default class Ball {
     this.maxSpeed = 9;
 
     this.num = num;
+    this.speed = { x: 0, y: 0 };
+
+    this.slowed = false;
+    this.sped = false;
   }
 
   init() {
@@ -42,7 +46,7 @@ export default class Ball {
 
   go() {
     if (this.state === 1) return;
-    this.speed = { x: 5, y: -7 };
+    this.speed = { x: 5, y: -6 };
     this.state = 1;
   }
 
@@ -152,6 +156,17 @@ export default class Ball {
           this.position.y = this.players[1].position.y - this.size;
         }
       }
+    }
+
+    if (this.slowed) {
+      if (this.speed.y < 0) this.speed.y = -4;
+      else if (this.speed.y > 0) this.speed.y = 4;
+    } else if (this.sped) {
+      if (this.speed.y < 0) this.speed.y = -8;
+      else if (this.speed.y > 0) this.speed.y = 8;
+    } else {
+      if (this.speed.y < 0) this.speed.y = -6;
+      else if (this.speed.y > 0) this.speed.y = 6;
     }
   }
 }

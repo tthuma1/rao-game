@@ -3,6 +3,7 @@ import InputHandler from "./input";
 import Ball from "./ball";
 import { buildLevel, levels } from "./levels";
 import Settings from "./settings";
+import Powerup from "./powerup";
 
 export const GAMESTATE = {
   MENU: 0,
@@ -72,6 +73,8 @@ export default class Game {
 
     this.player2 = new Player(this, 1);
     this.ball2 = new Ball(this, 1);
+
+    this.powerup = new Powerup(this);
 
     this.inputHandler = new InputHandler(this.player, this);
     this.hasInput = false;
@@ -152,6 +155,7 @@ export default class Game {
     }
 
     this.inputHandler.update();
+    this.powerup.update(timestamp);
   }
 
   draw(ctx) {
@@ -203,6 +207,8 @@ export default class Game {
 
       ctx.textAlign = "left";
       ctx.fillText("Score: " + this.score, this.screenWidth / 2 - 50, 30);
+
+      this.powerup.draw(ctx);
     }
   }
 
